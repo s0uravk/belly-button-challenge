@@ -7,8 +7,8 @@ function panel(response, dataset) {
     d3.json(url).then(response => console.log(response));
     
     // Extracting keys and values from metadata for the selected dataset
-    let demoArrKey = Object.keys(response.metadata.find(data => data.id == dataset));
-    let demoArrVal = Object.values(response.metadata.find(data => data.id == dataset));        
+    let demoArrKey = Object.keys(response.metadata.filter(data => data.id == dataset)[0]);
+    let demoArrVal = Object.values(response.metadata.filter(data => data.id == dataset)[0]);        
     
     // Displaying demographic information in the panel
     for (let i = 0; i < demoArrKey.length; i++) {
@@ -47,7 +47,7 @@ function getData() {
         plot(response, dataset);        
         d3.select('#sample-metadata').html('');
         panel(response, dataset);
-        console.log(Object.values(response.metadata.find(data => data.id == dataset)));
+        console.log(Object.values(response.metadata.filter(data => data.id == dataset)[0]));
     });
 }
 
@@ -70,7 +70,7 @@ function plot(response, dataset) {
         type: 'bar',
         orientation: 'h'
     }];
-    
+  
     // Updating the bar chart
     optionChanged('bar', dataBar);
 
@@ -96,18 +96,39 @@ function plot(response, dataset) {
     optionChanged('bubble', dataBubble);
     
     let wfreq = response.metadata.filter(data => data.id == dataset)[0].wfreq;
+    console.log(wfreq)
 
     let gaugeChart = [{
         domain: { x: [0, 1], y: [0, 1] },
         value: wfreq,
-        title: {text: "<b> Belly Button Washing Frequency </b> <br></br> Scrubs Per Week"},
+        title: { text: "<b> Belly Button Washing Frequency </b> <br></br> Scrubs Per Week" },
         type: "indicator",
         mode: "gauge+number",
         gauge: {
-            axis: { range: [null, 9] }
+            axis: { range: [null, 9] },
+            bar: { color: "#6699CC" },
+            bgcolor: "white",
+            borderwidth: 2,
+            bordercolor: "gray",
+            steps: [
+                { range: [0, 1], color: "#D1E3F9" }, // Lightest blue
+                { range: [1, 2], color: "#A3C7EE" }, // Light blue
+                { range: [2, 3], color: "#75ABE3" }, // Blue
+                { range: [3, 4], color: "#479FDE" }, // Dark blue
+                { range: [4, 5], color: "#1B94D9" }, // Darker blue
+                { range: [5, 6], color: "#007ACF" }, // Even darker blue
+                { range: [6, 7], color: "#0062A6" }, // Very dark blue
+                { range: [7, 8], color: "#004A7F" }, // Almost black blue
+                { range: [8, 9], color: "#003258" }  // Blackish blue
+            ],
+            threshold: {
+                line: { color: "red", width: 4 },
+                thickness: 0.75,
+                value: wfreq
+            }
         }
     }];
-
+       
     // Updating the gauge chart
     optionChanged('gauge', gaugeChart);
 }
