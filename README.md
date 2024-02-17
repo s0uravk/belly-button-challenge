@@ -3,47 +3,19 @@
 
 **Background**
 ---
-In this assignment, an interactive dashboard was built to explore the Belly Button Biodiversity dataset, which catalogs the microbes that colonize human navels in JSON format.
+In this assignment, an interactive dashboard was built to explore the Belly Button Biodiversity dataset, which catalogs the microbes that colonize human navels in JSON format. The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare.
 
-The dataset reveals that a small handful of microbial species (also called operational taxonomic units, or OTUs, in the study) were present in more than 70% of people, while the rest were relatively rare.
+**Functions**
+---
+The data was retrieved using D3 and plotted into a Bar chart, a Bubble chart, and a bonus Gauge chart using Plotly as well the demographic data was updated in the Demographic info panel which changed based on the selection of test subject ID from the dropdown menu. it was done in the following steps:
 
-Demographics information is dynamically populated based upon a user-selected test subject ID. A bar chart, bubble chart and a bonus gauge chart also update once the ID is changed. Code has been written using Plotly, JavaScript, HTML, CSS, and D3.js.
+1. The init() function get the response using D3.js and then the response is passed into plot() and panel function(). Where the plot function is responsible for preparing the data passed for plotting charts and the panel() function is responsible for updating the panel based on the value passed.
+2. The plot() function retrieves the required data for plotting each type of chart and makes a call to the optionChanged() function which accepts the id of the HTML element where the chart is being plotted and the data to be plotted. The optionChanged() function then plots the data using Plotly. HTML elements are first cleared before calling the plot and panel function to clear the existing visualization or information in the demographic panel to make space for new selections.
+3. The panel() function retrieves the required data and adds that data to the demographics panel.
+4. Apart from functions options are added to the dropdown along with the value as an attribute.
 
-All CSS, JS and images required are under the static folder. The main HTML file index.html is in the root folder of the Github repo.
-
-Plotly
-The ask was to retrieve test subject demographics, and draw a bar chart and bubble chart displaying each individual's samples. This was done as follows:
-
-Read in samples.json using the D3 library
-
-Retrieve metadata info for each test subject and display this in the form of an unordered list item as a key-value pair on the dashboard.
-
-Get required data for plotting, including sample_values, otu_ids and otu_labels which were used to create a trace and plot the bar chart.
-
-Since the task was to only plot the top 10 values, the three arrays were sliced and reversed to display the chart as below.
-
-image
-
-The entire sample arrays were used to plot a bubble chart.
-
-image
-
-The bonus challenge was to create a gauge chart. Using the documentation, an indicator trace was created with wfreq as the value for plotting.
-
-Any null values were given a value of zero.
-
-The gauge chart accounts for weekly washing frequency values ranging from 0-9.
-
-The default bar that indicates the value was set to transparent so that a needle pointer could be used on the chart.
-
-To plot the pointer correctly, I referred to this source which explains the math behind the pointer angles.
-
-image
-
-A function called plotCharts(id) was created that would take in a test subject ID as a parameter and plot all the above charts.
-
-A function called resetData() clears all the divs of the charts and demographic info.
-
-Another function init() calls the resetData() function, populates the dropdown menu with test subject IDs from the dataset and displays data of the first subject as a starting point.
-
-Everytime a new ID is selected from the dropdown (on change), an optionChanged(this.value) function is called, that resets the data once again and calls the plotCharts() function.
+**Visualizations**
+---
+1. The bar chart displays the top 10 OTUs found in that individual based on the selected Test Subject ID.
+2. The bubble chart displays the otu_ids on the x-axis and the sample_values on the y-axis and the size of the marker is also determined by the sample_values. Markers are colored based on the otu_ids and have hover text of otu_labels.
+3. The gauge chart shows the number of times the test subjects washed their belly button per week.
