@@ -17,42 +17,15 @@ function panel(response, dataset) {
 }
 
 // Function to update the restyled plot's values
-function optionChanged(type, newdata) {
+function optionChanged(type, newdata, layout) {
     // Clearing existing content of the specified HTML element
     d3.select(type).html('');
     // Creating a new Plotly plot with updated data
-    Plotly.newPlot(type, newdata);
+    Plotly.newPlot(type, newdata, layout);
 }
 
-// Function to fetch data and initialize default visualization
-function init() {
-    // Fetching data
-    d3.json(url).then(response => {       
-        // Plotting default visualization
-        plot(response, 940);
-        // Displaying demographic info panel for default dataset
-        panel(response, 940);        
-    });
-}
-
-// Function to handle data fetching and visualization update on dropdown change
-function getData() {
-    // Fetching data
-    d3.json(url).then(response => {
-        // Getting the selected dataset from the dropdown menu
-        let selection = d3.select('#selDataset');
-        let dataset = selection.property('value');
-        console.log(dataset);
-        // Updating the plots and demographic info panel with the selected dataset
-        plot(response, dataset);        
-        d3.select('#sample-metadata').html('');
-        panel(response, dataset);
-        console.log(Object.values(response.metadata.filter(data => data.id == dataset)[0]));
-    });
-}
-
-// Function to plot data
-function plot(response, dataset) {
+// Function to get data for plotting
+function getData(response, dataset) {
     // Extracting required data from the response
     let sampleData = response.samples.filter(data => data.id == dataset)[0];
     let sampleValues = sampleData.sample_values.sort((a, b) => b - a).slice(0, 10).reverse();
@@ -70,9 +43,18 @@ function plot(response, dataset) {
         type: 'bar',
         orientation: 'h'
     }];
+
+    // Layout for the bar chart
+    let layoutBar = {
+        title: "Top 10 OTUs",
+        xaxis: { title: "Sample Values" },
+        yaxis: { title: "OTU ID" },
+        width : 500,
+        height : 600
+    };
   
     // Updating the bar chart
-    optionChanged('bar', dataBar);
+    optionChanged('bar', dataBar, layoutBar);
 
     let sampleValues1 = sampleData.sample_values.sort((a, b) =>b-a).reverse();
     let otuIds1 = sampleData.otu_ids.reverse();
@@ -92,8 +74,18 @@ function plot(response, dataset) {
         
     }];
 
+    // Layout for the bubble chart
+    let layoutBubble = {
+        title: "OTU Bubble Chart",
+        xaxis: { title: "OTU ID" },
+        yaxis: { title: "Sample Values" },
+        width : 1200,
+        height : 600
+    };
+
+
     // Updating the bubble chart
-    optionChanged('bubble', dataBubble);
+    optionChanged('bubble', dataBubble, layoutBubble);
     
     let wfreq = response.metadata.filter(data => data.id == dataset)[0].wfreq;
     console.log(wfreq)
@@ -111,15 +103,15 @@ function plot(response, dataset) {
             borderwidth: 2,
             bordercolor: "gray",
             steps: [
-                { range: [0, 1], color: "#D1E3F9" }, // Lightest blue
-                { range: [1, 2], color: "#A3C7EE" }, // Light blue
-                { range: [2, 3], color: "#75ABE3" }, // Blue
-                { range: [3, 4], color: "#479FDE" }, // Dark blue
-                { range: [4, 5], color: "#1B94D9" }, // Darker blue
-                { range: [5, 6], color: "#007ACF" }, // Even darker blue
-                { range: [6, 7], color: "#0062A6" }, // Very dark blue
-                { range: [7, 8], color: "#004A7F" }, // Almost black blue
-                { range: [8, 9], color: "#003258" }  // Blackish blue
+                { range: [0, 1], color: "#D1E3F9" }, 
+                { range: [1, 2], color: "#A3C7EE" }, 
+                { range: [2, 3], color: "#75ABE3" }, 
+                { range: [3, 4], color: "#479FDE" }, 
+                { range: [4, 5], color: "#1B94D9" }, 
+                { range: [5, 6], color: "#007ACF" }, 
+                { range: [6, 7], color: "#0062A6" }, 
+                { range: [7, 8], color: "#004A7F" }, 
+                { range: [8, 9], color: "#003258" } 
             ],
             threshold: {
                 line: { color: "red", width: 4 },
@@ -128,13 +120,50 @@ function plot(response, dataset) {
             }
         }
     }];
+
+     // Layout for the gauge chart
+     let layoutGauge = {
+        margin: { t: 100, b: 0 },
+        width: 600,
+        height:500
+    };
+
        
     // Updating the gauge chart
-    optionChanged('gauge', gaugeChart);
+    optionChanged('gauge', gaugeChart, layoutGauge);
 }
 
-// Event listener for dropdown change
-d3.selectAll("#selDataset").on("change", getData);
+// Function to fetch data and initialize default visualization
+function init() {
+    // Fetching data
+    d3.json(url).then(response => {       
+        // Plotting default visualization
+        getData(response, 940);
+        // Displaying demographic info panel for default dataset
+        panel(response, 940);        
+    });
+}
+
+// Function to handle data fetching and visualization update on dropdown change
+function updateChange() {
+    // Fetching data
+    d3.json(url).then(response => {
+        // Getting the selected dataset from the dropdown menu
+        let selection = d3.select('#selDataset');
+        let dataset = selection.property('value');
+
+        console.log(dataset);
+
+        // Updating the plots and demographic info panel with the selected dataset
+        getData(response, dataset);        
+        d3.select('#sample-metadata').html('');
+        panel(response, dataset);
+        console.log(Object.values(response.metadata.filter(data => data.id == dataset)[0]));
+    });
+}
+
+// Initialize the visualization
+init();
 
 // Adding Options to Select tag with value attribute
 d3.json(url).then(response => {
@@ -146,5 +175,5 @@ d3.json(url).then(response => {
     }
 });
 
-// Initialize the visualization
-init();
+// Event listener for dropdown change
+d3.selectAll("#selDataset").on("change", updateChange);
