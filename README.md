@@ -9,8 +9,8 @@ In this assignment, an interactive dashboard was built to explore the Belly Butt
 ---
 The data was retrieved using D3 and plotted into a Bar chart, a Bubble chart, and a bonus Gauge chart using Plotly as well the demographic data was updated in the Demographic info panel which changed based on the selection of test subject ID from the dropdown menu. it was done in the following steps:
 
-1. The init() function get the response using D3.js and then the response is passed into plot() and panel function(). Where the plot function is responsible for preparing the data passed for plotting charts and the panel() function is responsible for updating the panel based on the value passed.
-2. The plot() function retrieves the required data for plotting each type of chart and makes a call to the optionChanged() function which accepts the id of the HTML element where the chart is being plotted and the data to be plotted. The optionChanged() function then plots the data using Plotly. HTML elements are first cleared before calling the plot and panel function to clear the existing visualization or information in the demographic panel to make space for new selections.
+1. The init() function gets the response using D3.js and then the response is passed into getData() and panel function(). Where the getData function is responsible for preparing the data passed for plotting charts and plots the visualizations with the use of the optionChanged() function and the panel() function is responsible for updating the panel based on the value passed.
+2. The optionChanged() function then plots the data using Plot, which accepts the id of the HTML element where the chart is being plotted and the data to be plotted. HTML elements are first cleared before calling the plot and panel function to clear the existing visualization or information in the demographic panel to make space for new selections.
 3. The panel() function retrieves the required data and adds that data to the demographics panel.
 4. Apart from functions options are added to the dropdown along with the value as an attribute.
 
