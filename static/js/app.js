@@ -10,6 +10,9 @@ function panel(response, dataset) {
     let demoArrKey = Object.keys(response.metadata.filter(data => data.id == dataset)[0]);
     let demoArrVal = Object.values(response.metadata.filter(data => data.id == dataset)[0]);        
     
+    //Clear html element before inserting new data
+    d3.select('#sample-metadata').html('');
+
     // Displaying demographic information in the panel
     for (let i = 0; i < demoArrKey.length; i++) {
         d3.select('#sample-metadata').append('div').text(`${demoArrKey[i]} : ${demoArrVal[i]}`)
@@ -155,9 +158,9 @@ function updateChange() {
         console.log(dataset);
 
         // Updating the plots and demographic info panel with the selected dataset
-        getData(response, dataset);        
-        d3.select('#sample-metadata').html('');
+        getData(response, dataset);
         panel(response, dataset);
+
         console.log(Object.values(response.metadata.filter(data => data.id == dataset)[0]));
     });
 }
