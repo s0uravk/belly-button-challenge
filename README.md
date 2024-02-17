@@ -10,9 +10,10 @@ In this assignment, an interactive dashboard was built to explore the Belly Butt
 The data was retrieved using D3 and plotted into a Bar chart, a Bubble chart, and a bonus Gauge chart using Plotly as well the demographic data was updated in the Demographic info panel which changed based on the selection of test subject ID from the dropdown menu. it was done in the following steps:
 
 1. The init() function gets the response using D3.js and then the response is passed into getData() and panel function(). Where the getData function is responsible for preparing the data passed for plotting charts and plots the visualizations with the use of the optionChanged() function and the panel() function is responsible for updating the panel based on the value passed.
-2. The optionChanged() function then plots the data using Plot, which accepts the id of the HTML element where the chart is being plotted and the data to be plotted. HTML elements are first cleared before calling the plot and panel function to clear the existing visualization or information in the demographic panel to make space for new selections.
-3. The panel() function retrieves the required data and adds that data to the demographics panel.
-4. Apart from functions options are added to the dropdown along with the value as an attribute.
+2. The updateChange() function is called when there is a change made to an option in the dropdown menu, which retrieves the option selected and calls getData() and panel function() to display updated demographic information and visualization. And getData() function makes a call to the optionChanged() function as mentioned above.
+3. The optionChanged() function then plots the data using Plotly, which accepts the ID of the HTML element where the chart is being plotted, the data to be plotted, and the layout for the visualization. Before the data is plotted, already existing HTML elements are cleared.
+4. The panel() function retrieves the required data and adds that data to the demographics panel while removing the already existing values.
+5. Apart from functions options are added to the dropdown along with the value as an attribute.
 
 **Visualizations**
 ---
